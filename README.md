@@ -1,5 +1,4 @@
-# TRANSPAN-Istanbul-Training
-Tools for analysis of -omics data in pancreatic cancer
+# Whole-Exome Sequencing (WES) Analysis
 
 ## Steps
 
