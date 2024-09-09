@@ -1,4 +1,4 @@
-# TRANSPAN-stanbul-Training
+# TRANSPAN-Istanbul-Training
 Tools for analysis of -omics data in pancreatic cancer
 
 ## Steps
