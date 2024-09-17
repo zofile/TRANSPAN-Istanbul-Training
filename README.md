@@ -52,7 +52,7 @@ mkdir /home/projects/transpan_istanbul/{user_id}/annotation
 
 ```
 fastqc --dir /home/tmp/guest \
---outdir /home/projects/ejprd_istanbul_workshop/{user_id}/qc \
+--outdir /home/projects/transpan_istanbul/{user_id}/qc \
 --threads 3 --quiet --noextract \
 /home/projects/transpan_istanbul/FASTQ/sample_L001_1.fastq.gz /home/projects/transpan_istanbul/FASTQ/sample_L001_2.fastq.gz
 ```
@@ -187,7 +187,7 @@ gatk GenotypeGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.
 vt validate /home/projects/transpan_istanbul/{user_id}/variant_calling/sample_genotype.vcf.gz \
 -r /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta
 
-vcfanno -p 8 -lua /home/projects/ejprd_istanbul_workshop/scripts/custom.lua \
+vcfanno -p 8 -lua /home/projects/transpan_istanbul/scripts/custom.lua \
 /home/projects/transpan_istanbul/scripts/config.toml \
 /home/projects/transpan_istanbul/{user_id}/variant_calling/sample_genotype.vcf.gz > /home/projects/transpan_istanbul/{user_id}/annotation/sample_vcfanno.vcf
 ```
