@@ -55,11 +55,6 @@ fastqc --dir /home/tmp/guest \
 --outdir /home/projects/transpan_istanbul/$user_id/qc \
 --threads 3 --quiet --noextract \
 /home/projects/transpan_istanbul/FASTQ/sample_L001_1.fastq
-
-fastqc --dir /home/tmp/guest \
---outdir /home/projects/transpan_istanbul/$user_id/qc \
---threads 3 --quiet --noextract \
-/home/projects/transpan_istanbul/FASTQ/sample_L001_2.fastq
 ```
 
 ### Trimming
