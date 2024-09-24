@@ -94,17 +94,6 @@ sambamba sort --tmpdir /home/tmp/guest --nthreads=3 \
 rm -f /home/projects/transpan_istanbul/$user_id/mapping/sample.unsorted.bam
 ```
 
-Combine multiple lanes
-
-```
-sambamba merge -t 3 /home/projects/transpan_istanbul/$user_id/mapping/sample.bam \
-/home/projects/transpan_istanbul/$user_id/mapping/sample_L001.bam \
-/home/projects/transpan_istanbul/$user_id/mapping/sample_L002.bam
-
-picard BuildBamIndex INPUT=/home/projects/transpan_istanbul/$user_id/mapping/sample.bam \
-TMP_DIR=/home/tmp/guest VALIDATION_STRINGENCY=LENIENT
-```
-
 ### Processing using GATK best practices
 
 #### MarkDuplicates
