@@ -54,7 +54,7 @@ mkdir /home/projects/transpan_istanbul/${user_id}/annotation
 fastqc --dir /home/tmp/guest \
 --outdir /home/projects/transpan_istanbul/${user_id}/qc \
 --threads 3 --quiet --noextract \
-/home/projects/transpan_istanbul/FASTQ/sample_L001_1.fastq.gz /home/projects/transpan_istanbul/FASTQ/sample_L001_2.fastq.gz
+/home/projects/transpan_istanbul/FASTQ/sample_L001_1.fastq /home/projects/transpan_istanbul/FASTQ/sample_L001_2.fastq
 ```
 
 ### Trimming
@@ -63,16 +63,10 @@ fastqc --dir /home/tmp/guest \
 trim_galore --phred33 --quality 20 --gzip --length 35 \
 --trim-n --output_dir /home/projects/transpan_istanbul/${user_id}/trimming \
 --retain_unpaired --cores 3 \
---paired /home/projects/transpan_istanbul/FASTQ/sample_L001_1.fastq.gz /home/projects/transpan_istanbul/FASTQ/sample_L001_2.fastq.gz
+--paired /home/projects/transpan_istanbul/FASTQ/sample_L001_1.fastq /home/projects/transpan_istanbul/FASTQ/sample_L001_2.fastq
 ```
 
 ### Mapping
-
-#### Index reference genome
-
-```
-bwa index path/to/ref.fa
-```
 
 #### Mapping to a indexed genome
 
