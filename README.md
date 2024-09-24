@@ -28,7 +28,7 @@ FASTQ files are located in the `/home/projects/transpan_istanbul/FASTQ/`.
 
 Create new tmux session
 ```
-tmux new -s ${user_id}
+tmux new -s $user_id
 ```
 
 Activate the conda environment
@@ -39,25 +39,25 @@ conda activate EpiRARE_new
 Create necessary folders
 
 ```
-mkdir /home/projects/transpan_istanbul/${user_id}
-mkdir /home/projects/transpan_istanbul/${user_id}/qc
-mkdir /home/projects/transpan_istanbul/${user_id}/trimming
-mkdir /home/projects/transpan_istanbul/${user_id}/mapping
-mkdir /home/projects/transpan_istanbul/${user_id}/processing
-mkdir /home/projects/transpan_istanbul/${user_id}/variant_calling
-mkdir /home/projects/transpan_istanbul/${user_id}/annotation
+mkdir /home/projects/transpan_istanbul/$user_id
+mkdir /home/projects/transpan_istanbul/$user_id/qc
+mkdir /home/projects/transpan_istanbul/$user_id/trimming
+mkdir /home/projects/transpan_istanbul/$user_id/mapping
+mkdir /home/projects/transpan_istanbul/$user_id/processing
+mkdir /home/projects/transpan_istanbul/$user_id/variant_calling
+mkdir /home/projects/transpan_istanbul/$user_id/annotation
 ```
 
 ### Quality Control
 
 ```
 fastqc --dir /home/tmp/guest \
---outdir /home/projects/transpan_istanbul/${user_id}/qc \
+--outdir /home/projects/transpan_istanbul/$user_id/qc \
 --threads 3 --quiet --noextract \
 /home/projects/transpan_istanbul/FASTQ/sample_L001_1.fastq
 
 fastqc --dir /home/tmp/guest \
---outdir /home/projects/transpan_istanbul/${user_id}/qc \
+--outdir /home/projects/transpan_istanbul/$user_id/qc \
 --threads 3 --quiet --noextract \
 /home/projects/transpan_istanbul/FASTQ/sample_L001_2.fastq
 ```
@@ -66,7 +66,7 @@ fastqc --dir /home/tmp/guest \
 
 ```
 trim_galore --phred33 --quality 20 --gzip --length 35 \
---trim-n --output_dir /home/projects/transpan_istanbul/${user_id}/trimming \
+--trim-n --output_dir /home/projects/transpan_istanbul/$user_id/trimming \
 --retain_unpaired --cores 3 \
 --paired /home/projects/transpan_istanbul/FASTQ/sample_L001_1.fastq /home/projects/transpan_istanbul/FASTQ/sample_L001_2.fastq
 ```
@@ -78,30 +78,30 @@ trim_galore --phred33 --quality 20 --gzip --length 35 \
 ```
 bwa mem -R \@RG\\tID:sample\\tPL:ILLUMINA\\tLB:Twist_Comprehensive\\tSM:sample\ \
 -M -t 3 /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
-/home/projects/transpan_istanbul/${user_id}/trimming/sample_L001_1_val_1.fq.gz \
-/home/projects/transpan_istanbul/${user_id}/trimming/sample_L001_2_val_2.fq.gz > /home/projects/transpan_istanbul/${user_id}/mapping/sample.sam
+/home/projects/transpan_istanbul/$user_id/trimming/sample_L001_1_val_1.fq.gz \
+/home/projects/transpan_istanbul/$user_id/trimming/sample_L001_2_val_2.fq.gz > /home/projects/transpan_istanbul/$user_id/mapping/sample.sam
 
 sambamba view --nthreads=3 --with-header --show-progress --sam-input --format=bam \
---output-filename=/home/projects/transpan_istanbul/${user_id}/mapping/sample.unsorted.bam \
-/home/projects/transpan_istanbul/${user_id}/mapping/sample.sam
+--output-filename=/home/projects/transpan_istanbul/$user_id/mapping/sample.unsorted.bam \
+/home/projects/transpan_istanbul/$user_id/mapping/sample.sam
 
-rm -f /home/projects/transpan_istanbul/${user_id}/mapping/sample.sam
+rm -f /home/projects/transpan_istanbul/$user_id/mapping/sample.sam
 
 sambamba sort --tmpdir /home/tmp/guest --nthreads=3 \
---out=/home/projects/transpan_istanbul/${user_id}/mapping/sample.bam \
-/home/projects/transpan_istanbul/${user_id}/mapping/sample.unsorted.bam
+--out=/home/projects/transpan_istanbul/$user_id/mapping/sample.bam \
+/home/projects/transpan_istanbul/$user_id/mapping/sample.unsorted.bam
 
-rm -f /home/projects/transpan_istanbul/${user_id}/mapping/sample.unsorted.bam
+rm -f /home/projects/transpan_istanbul/$user_id/mapping/sample.unsorted.bam
 ```
 
 Combine multiple lanes
 
 ```
-sambamba merge -t 3 /home/projects/transpan_istanbul/${user_id}/mapping/sample.bam \
-/home/projects/transpan_istanbul/${user_id}/mapping/sample_L001.bam \
-/home/projects/transpan_istanbul/${user_id}/mapping/sample_L002.bam
+sambamba merge -t 3 /home/projects/transpan_istanbul/$user_id/mapping/sample.bam \
+/home/projects/transpan_istanbul/$user_id/mapping/sample_L001.bam \
+/home/projects/transpan_istanbul/$user_id/mapping/sample_L002.bam
 
-picard BuildBamIndex INPUT=/home/projects/transpan_istanbul/${user_id}/mapping/sample.bam \
+picard BuildBamIndex INPUT=/home/projects/transpan_istanbul/$user_id/mapping/sample.bam \
 TMP_DIR=/home/tmp/guest VALIDATION_STRINGENCY=LENIENT
 ```
 
@@ -110,17 +110,17 @@ TMP_DIR=/home/tmp/guest VALIDATION_STRINGENCY=LENIENT
 #### MarkDuplicates
 
 ```
-picard MarkDuplicates I=/home/projects/transpan_istanbul/${user_id}/mapping/sample.bam \
-O=/home/projects/transpan_istanbul/${user_id}/processing/sample.mdup.bam \
-M=/home/projects/transpan_istanbul/${user_id}/processing/sample.mdup_metrics.txt \
+picard MarkDuplicates I=/home/projects/transpan_istanbul/$user_id/mapping/sample.bam \
+O=/home/projects/transpan_istanbul/$user_id/processing/sample.mdup.bam \
+M=/home/projects/transpan_istanbul/$user_id/processing/sample.mdup_metrics.txt \
 CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT TMP_DIR=/home/tmp/guest
 ```
 
 #### FixMateInformation
 
 ```
-picard FixMateInformation I=/home/projects/transpan_istanbul/${user_id}/processing/sample.mdup.bam \
-O=/home/projects/transpan_istanbul/${user_id}/processing/sample.mdup.matefixed.bam \
+picard FixMateInformation I=/home/projects/transpan_istanbul/$user_id/processing/sample.mdup.bam \
+O=/home/projects/transpan_istanbul/$user_id/processing/sample.mdup.matefixed.bam \
 SORT_ORDER=coordinate CREATE_INDEX=true VALIDATION_STRINGENCY=SILENT TMP_DIR=/home/tmp/guest
 ```
 
@@ -129,20 +129,20 @@ SORT_ORDER=coordinate CREATE_INDEX=true VALIDATION_STRINGENCY=SILENT TMP_DIR=/ho
 ```
 gatk BaseRecalibrator --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 --intervals /home/resources/kits/hg38/Twist_Comprehensive_Exome_Covered_Targets_hg38.bed --interval-padding 100 \
---input /home/projects/transpan_istanbul/${user_id}/processing/sample.mdup.matefixed.bam \
+--input /home/projects/transpan_istanbul/$user_id/processing/sample.mdup.matefixed.bam \
 --known-sites /home/resources/sites/hg38/dbsnp_146.hg38.vcf.gz \
 --known-sites /home/resources/sites/hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz \
 --known-sites /home/resources/sites/hg38/1000G_phase1.snps.high_confidence.hg38.vcf.gz \
---output /home/projects/transpan_istanbul/${user_id}/processing/sample.recal_data.table --tmp-dir /home/tmp/guest
+--output /home/projects/transpan_istanbul/$user_id/processing/sample.recal_data.table --tmp-dir /home/tmp/guest
 ```
 
 #### ApplyBQSR
 
 ```
 gatk ApplyBQSR --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
---input /home/projects/transpan_istanbul/${user_id}/processing/sample.mdup.matefixed.bam \
---bqsr-recal-file /home/projects/transpan_istanbul/${user_id}/processing/sample.recal_data.table \
---output /home/projects/transpan_istanbul/${user_id}/processing/sample.mdup.matefixed.bqsr.bam --tmp-dir /home/tmp/guest
+--input /home/projects/transpan_istanbul/$user_id/processing/sample.mdup.matefixed.bam \
+--bqsr-recal-file /home/projects/transpan_istanbul/$user_id/processing/sample.recal_data.table \
+--output /home/projects/transpan_istanbul/$user_id/processing/sample.mdup.matefixed.bqsr.bam --tmp-dir /home/tmp/guest
 ```
 
 #### HaplotypeCaller
@@ -150,8 +150,8 @@ gatk ApplyBQSR --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38
 ```
 gatk HaplotypeCaller --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 --intervals /home/resources/kits/hg38/Twist_Comprehensive_Exome_Covered_Targets_hg38.bed --interval-padding 100 \
---input /home/projects/transpan_istanbul/${user_id}/processing/sample.mdup.matefixed.bqsr.bam \
---output /home/projects/transpan_istanbul/${user_id}/variant_calling/sample.g.vcf.gz \
+--input /home/projects/transpan_istanbul/$user_id/processing/sample.mdup.matefixed.bqsr.bam \
+--output /home/projects/transpan_istanbul/$user_id/variant_calling/sample.g.vcf.gz \
 --emit-ref-confidence GVCF --annotation-group AS_StandardAnnotation --tmp-dir /home/tmp/guest \
 --native-pair-hmm-threads 4
 ```
@@ -161,9 +161,9 @@ If multiple samples
 ```
 gatk CombineGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 --intervals /home/resources/kits/hg38/Twist_Comprehensive_Exome_Covered_Targets_hg38.bed --interval-padding 100 \
---variant /home/projects/transpan_istanbul/${user_id}/variant_calling/sample1.g.vcf.gz \
---variant /home/projects/transpan_istanbul/${user_id}/variant_calling/sample2.g.vcf.gz \
- -O /home/projects/transpan_istanbul/${user_id}/variant_calling/combined.g.vcf.gz \
+--variant /home/projects/transpan_istanbul/$user_id/variant_calling/sample1.g.vcf.gz \
+--variant /home/projects/transpan_istanbul/$user_id/variant_calling/sample2.g.vcf.gz \
+ -O /home/projects/transpan_istanbul/$user_id/variant_calling/combined.g.vcf.gz \
 --annotation-group AS_StandardAnnotation --tmp-dir /home/tmp/guest
 ```
 
@@ -172,8 +172,8 @@ gatk CombineGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.h
 ```
 gatk GenotypeGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 --intervals /home/resources/kits/hg38/Twist_Comprehensive_Exome_Covered_Targets_hg38.bed --interval-padding 100 \
---variant /home/projects/transpan_istanbul/${user_id}/variant_calling/sample.g.vcf.gz \
---output /home/projects/transpan_istanbul/${user_id}/variant_calling/sample_genotype.vcf.gz \
+--variant /home/projects/transpan_istanbul/$user_id/variant_calling/sample.g.vcf.gz \
+--output /home/projects/transpan_istanbul/$user_id/variant_calling/sample_genotype.vcf.gz \
 --annotation-group AS_StandardAnnotation --tmp-dir /home/tmp/guest
 ```
 
@@ -183,29 +183,29 @@ gatk GenotypeGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.
 #### vcfanno
 
 ```
-vt validate /home/projects/transpan_istanbul/${user_id}/variant_calling/sample_genotype.vcf.gz \
+vt validate /home/projects/transpan_istanbul/$user_id/variant_calling/sample_genotype.vcf.gz \
 -r /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta
 
 vcfanno -p 8 -lua /home/projects/transpan_istanbul/scripts/custom.lua \
 /home/projects/transpan_istanbul/scripts/config.toml \
-/home/projects/transpan_istanbul/${user_id}/variant_calling/sample_genotype.vcf.gz > /home/projects/transpan_istanbul/${user_id}/annotation/sample_vcfanno.vcf
+/home/projects/transpan_istanbul/$user_id/variant_calling/sample_genotype.vcf.gz > /home/projects/transpan_istanbul/$user_id/annotation/sample_vcfanno.vcf
 ```
 
 #### vep
 
 ```
-/home/tools/vep/ensembl-vep-release-109/vep -i /home/projects/transpan_istanbul/${user_id}/annotation/sample_vcfanno.vcf \
+/home/tools/vep/ensembl-vep-release-109/vep -i /home/projects/transpan_istanbul/$user_id/annotation/sample_vcfanno.vcf \
 --offline --cache --dir /home/tools/vep/ --cache_version 109 \
 --assembly GRCh38 --hgvsg --everything --total_length --fork 8 \
---force_overwrite -o /home/projects/transpan_istanbul/${user_id}/annotation/sample_vep.vcf \
+--force_overwrite -o /home/projects/transpan_istanbul/$user_id/annotation/sample_vep.vcf \
 --vcf --fasta /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta
 ```
 
 #### vcf2db
 
 ```
-vcf2db.py /home/projects/transpan_istanbul/${user_id}/annotation/sample_vep.vcf \
-/home/projects/transpan_istanbul/sample.ped /home/projects/transpan_istanbul/${user_id}/annotation/sample.gemini.db
+vcf2db.py /home/projects/transpan_istanbul/$user_id/annotation/sample_vep.vcf \
+/home/projects/transpan_istanbul/sample.ped /home/projects/transpan_istanbul/$user_id/annotation/sample.gemini.db
 ```
 
 #### gemini
@@ -225,30 +225,30 @@ vcf2db.py /home/projects/transpan_istanbul/${user_id}/annotation/sample_vep.vcf 
             	or polyphen_pred == 'possibly_damaging' or \
             	polyphen_pred == 'probably_damaging' or sift_pred == 'deleterious' or \
             	sift_pred == 'deleterious_low_confidence'" \
-              --header /home/projects/transpan_istanbul/${user_id}/annotation/sample.gemini.db > \
-              /home/projects/transpan_istanbul/${user_id}/annotation/sample.query.txt
+              --header /home/projects/transpan_istanbul/$user_id/annotation/sample.gemini.db > \
+              /home/projects/transpan_istanbul/$user_id/annotation/sample.query.txt
 ```
 
 #### InterVar
 
 ```
 python /home/tools/InterVar/Intervar.py --buildver=hg38 \
-        	--input=/home/projects/transpan_istanbul/${user_id}/annotation/sample_vep.vcf \
+        	--input=/home/projects/transpan_istanbul/$user_id/annotation/sample_vep.vcf \
         	--database_intervar=/home/tools/InterVar/intervardb/ \
         	--table_annovar=/home/tools/annovar/table_annovar.pl \
         	--convert2annovar=/home/tools/annovar/convert2annovar.pl \
         	--annotate_variation=/home/tools/annovar/annotate_variation.pl \
         	--database_locat=/home/tools/annovar/humandb/ \
         	--input_type=VCF \
-        	--output=/home/projects/transpan_istanbul/${user_id}/annotation/sample
+        	--output=/home/projects/transpan_istanbul/$user_id/annotation/sample
 ```
 
 ### Create Final Report
 
 ```
 Rscript --vanilla /home/projects/transpan_istanbul/scripts/final_report_script.R \
-/home/projects/transpan_istanbul/${user_id}/annotation/sample.hg38_multianno.txt.intervar \
-/home/projects/transpan_istanbul/${user_id}/annotation/sample.query.txt \
-/home/projects/transpan_istanbul/${user_id}/annotation/sample.hg38_multianno.txt \
-/home/projects/transpan_istanbul/${user_id}/annotation/sample.final.annotation.tsv
+/home/projects/transpan_istanbul/$user_id/annotation/sample.hg38_multianno.txt.intervar \
+/home/projects/transpan_istanbul/$user_id/annotation/sample.query.txt \
+/home/projects/transpan_istanbul/$user_id/annotation/sample.hg38_multianno.txt \
+/home/projects/transpan_istanbul/$user_id/annotation/sample.final.annotation.tsv
 ```
