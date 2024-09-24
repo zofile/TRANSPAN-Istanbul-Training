@@ -28,7 +28,7 @@ FASTQ files are located in the `/home/projects/transpan_istanbul/FASTQ/`.
 
 Create new tmux session
 ```
-tmux new -s {session_name}
+tmux new -s {user_id}
 ```
 
 Activate the conda environment
